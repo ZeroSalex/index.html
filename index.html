@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Hub | Secure Edition</title>
+    <title>Digital Hub | Secure & Professional</title>
     <style>
         :root {
             --bg: #0f0f12; --card: #1a1a20; --text: #ffffff; --border: #333; --shadow: rgba(0,0,0,0.5);
-            --accent: #4facfe; --discount-color: #ffcc00; --error: #ff4444;
+            --accent: #4facfe; --discount-color: #ffcc00; --error: #ff4444; --warning: #ffa500;
         }
         .light-theme {
             --bg: #f0f2f5; --card: #ffffff; --text: #1a1a20; --border: #ddd; --shadow: rgba(0,0,0,0.1);
@@ -16,50 +16,68 @@
 
         /* Авторизация */
         #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .auth-card { padding: 40px; width: 300px; background: var(--card); border: 2px solid var(--accent); border-radius: 20px; box-shadow: 0 4px 20px var(--shadow); }
-        .auth-input { padding: 12px; width: 100%; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); box-sizing: border-box; }
-        #auth-msg { color: var(--error); font-size: 0.8rem; margin-bottom: 10px; min-height: 1.2rem; }
+        .auth-card { padding: 30px; width: 320px; background: var(--card); border: 2px solid var(--accent); border-radius: 24px; box-shadow: 0 10px 30px var(--shadow); }
+        
+        .warning-box { 
+            background: rgba(255, 165, 0, 0.1); border: 1px solid var(--warning); 
+            color: var(--warning); padding: 10px; border-radius: 12px; 
+            font-size: 0.75rem; margin-bottom: 20px; line-height: 1.4;
+            text-align: left;
+        }
 
-        /* Вкладки */
+        .auth-input { padding: 14px; width: 100%; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); box-sizing: border-box; font-size: 1rem; }
+        #auth-msg { color: var(--error); font-size: 0.85rem; margin-bottom: 10px; min-height: 1.2rem; font-weight: bold; }
+
+        /* Навигация вкладок */
         .tabs-nav { display: flex; justify-content: center; gap: 8px; margin: 20px 0; padding: 0 10px; }
-        .tab-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: bold; flex: 1; max-width: 120px; transition: 0.3s; }
-        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-        .tab-content { display: none; animation: fadeIn 0.3s ease; flex-direction: column; align-items: center; }
+        .tab-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 14px; cursor: pointer; font-weight: bold; flex: 1; max-width: 130px; transition: 0.3s; font-size: 0.9rem; }
+        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 0 15px rgba(79, 172, 254, 0.4); }
+        
+        .tab-content { display: none; animation: fadeIn 0.4s ease; flex-direction: column; align-items: center; }
         .tab-content.active { display: flex; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Геймплей */
-        .stats-bar { display: flex; justify-content: center; gap: 20px; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .lightning { font-size: 6rem; cursor: pointer; margin: 15px; transition: 0.1s; filter: drop-shadow(0 0 20px var(--accent)); }
-        .btn-main { background: #44ff44; border: none; padding: 12px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; }
+        .stats-bar { display: flex; justify-content: center; gap: 20px; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; font-weight: bold; }
+        .lightning { font-size: 7rem; cursor: pointer; margin: 15px; transition: 0.1s; filter: drop-shadow(0 0 25px var(--accent)); display: inline-block; }
+        .lightning:active { transform: scale(0.92); }
+        .btn-main { background: #44ff44; border: none; padding: 15px 40px; border-radius: 15px; font-weight: bold; cursor: pointer; color: #000; font-size: 1rem; box-shadow: 0 4px 0 #2db32d; }
+        .btn-main:active { transform: translateY(2px); box-shadow: 0 2px 0 #2db32d; }
         
-        .shop-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 10px; }
-        .item, .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 15px; }
-        .item { width: 140px; }
-        .service-card { width: 90%; max-width: 400px; text-align: left; margin-bottom: 10px; }
+        .shop-grid { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 15px; }
+        .item, .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 20px; box-shadow: 0 4px 10px var(--shadow); }
+        .item { width: 150px; }
+        .service-card { width: 92%; max-width: 420px; text-align: left; margin-bottom: 15px; border-left: 4px solid var(--accent); }
         
-        .buy-btn { background: var(--accent); border: none; color: #fff; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
-        .buy-btn:disabled { background: #444; opacity: 0.5; }
+        .buy-btn { background: var(--accent); border: none; color: #fff; padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .buy-btn:disabled { background: #444; opacity: 0.4; cursor: not-allowed; }
 
-        #cheat-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
+        #cheat-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,0,0,0.98); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; color: white; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="cheat-overlay">
-        <h1>ЗАЩИТА ⛔</h1>
-        <button class="btn-main" onclick="location.reload()">ОБНОВИТЬ</button>
+        <h1>СИСТЕМА ЗАЩИТЫ ⛔</h1>
+        <p>Подозрительная активность. Пожалуйста, играйте честно.</p>
+        <button class="btn-main" onclick="location.reload()">ВЕРНУТЬСЯ</button>
     </div>
 
     <div id="auth-screen">
         <div class="auth-card">
-            <h2 style="color: var(--accent); margin-top:0;">Вход в систему</h2>
+            <h2 style="color: var(--accent); margin-top:0;">Digital Hub</h2>
+            
+            <div class="warning-box">
+                <b>⚠️ ВНИМАНИЕ:</b><br>
+                • Создание второго аккаунта невозможно.<br>
+                • Обязательно <b>запомните пароль</b>. Восстановить его будет нельзя!
+            </div>
+
             <div id="auth-msg"></div>
             <input type="text" id="name-input" class="auth-input" placeholder="Никнейм">
             <input type="password" id="pass-input" class="auth-input" placeholder="Пароль">
-            <button class="buy-btn" id="login-btn" style="padding: 15px;">ВОЙТИ / СОЗДАТЬ</button>
-            <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 15px;">Один аккаунт на одно устройство</p>
+            <button class="buy-btn" id="login-btn" style="padding: 16px; font-size: 1rem;">ВОЙТИ В СИСТЕМУ</button>
         </div>
     </div>
 
@@ -71,7 +89,7 @@
         </div>
 
         <div class="tabs-nav">
-            <button class="tab-btn active" id="btn-play" onclick="openTab('tab-play')">Игра</button>
+            <button class="tab-btn active" id="btn-play" onclick="openTab('tab-play')">Энергия</button>
             <button class="tab-btn" id="btn-upgrades" onclick="openTab('tab-upgrades')">Магазин</button>
             <button class="tab-btn" id="btn-services" onclick="openTab('tab-services')">Услуги</button>
         </div>
@@ -86,7 +104,7 @@
                 <div class="item"><h4>Клик</h4><p>$<span id="c-cost">50</span></p><button class="buy-btn" id="buy-click">Улучшить</button></div>
                 <div class="item"><h4>Ветряк</h4><p>$<span id="w-cost">10</span></p><button class="buy-btn" id="buy-wind">Купить</button></div>
             </div>
-            <h3 style="color: var(--discount-color);">Купоны на скидку</h3>
+            <h3 style="color: var(--discount-color); margin-top: 20px;">Бонусы за валюту</h3>
             <div class="shop-grid">
                 <div class="item"><h4>Скидка 15%</h4><p>$25000</p><button class="buy-btn" id="buy-d1">КУПИТЬ</button></div>
                 <div class="item"><h4>Скидка 15%</h4><p>$25000</p><button class="buy-btn" id="buy-d2">КУПИТЬ</button></div>
@@ -97,18 +115,17 @@
             <div class="service-card">
                 <h3>Сайт под ключ</h3>
                 <p id="price-site">Цена: 5 000 руб.</p>
-                <a href="https://t.me/Serv1ce465" class="buy-btn" style="text-decoration:none; display:block; text-align:center">Заказать</a>
+                <a href="https://t.me/Serv1ce465" class="buy-btn" style="text-decoration:none; display:block; text-align:center">Заказать разработку</a>
             </div>
         </div>
         
-        <button onclick="logout()" style="background:none; border:none; color:gray; cursor:pointer; margin-top:20px;">Выйти из аккаунта</button>
+        <button onclick="logout()" style="background:none; border:none; color:gray; cursor:pointer; margin-top:30px; font-size: 0.8rem; text-decoration: underline;">Сменить сессию</button>
     </div>
 
 <script>
     let energy, money, clickPower, autoRate, pClick, pWind, user, d1_bought, d2_bought;
     let lastClickTime = 0, lastX = 0, lastY = 0, samePointClicks = 0;
 
-    // СИСТЕМА ЛОГИНА
     const loginBtn = document.getElementById('login-btn');
     const authMsg = document.getElementById('auth-msg');
 
@@ -119,26 +136,19 @@
         const localPass = localStorage.getItem('tycoon_pass');
 
         if (name.length < 3 || pass.length < 4) {
-            authMsg.innerText = "Ник от 3 симв., пароль от 4 симв.";
+            authMsg.innerText = "Минимум: Ник (3), Пароль (4)";
             return;
         }
 
-        // Если аккаунт уже создан на этом устройстве
         if (localUser && localUser !== name) {
-            authMsg.innerText = "На этом устройстве уже есть аккаунт: " + localUser;
+            authMsg.innerText = "Ошибка: Мультиаккаунт запрещен!";
             return;
         }
 
-        // Если это вход в существующий аккаунт
         if (localUser === name) {
-            if (localPass === pass) {
-                user = name; start();
-            } else {
-                authMsg.innerText = "Неверный пароль!";
-            }
-        } 
-        // Если это создание нового аккаунта
-        else {
+            if (localPass === pass) { user = name; start(); } 
+            else { authMsg.innerText = "Неверный пароль!"; }
+        } else {
             user = name;
             localStorage.setItem('tycoon_user', name);
             localStorage.setItem('tycoon_pass', pass);
@@ -188,13 +198,12 @@
         document.getElementById('buy-wind').disabled = money < pWind;
         
         const b1 = document.getElementById('buy-d1');
-        if(d1_bought) { b1.innerText = "ЕСТЬ"; b1.disabled = true; document.getElementById('price-site').innerText = "Цена: 4 250 руб. (Скидка 15%)"; }
+        if(d1_bought) { b1.innerText = "АКТИВНО"; b1.disabled = true; document.getElementById('price-site').innerHTML = "<s>5 000</s> <span style='color:#44ff44'>4 250 руб.</span>"; }
         else { b1.disabled = money < 25000; }
         
         save();
     }
 
-    // Остальная логика игры (клики, табы)
     document.getElementById('clicker').onclick = (e) => {
         let now = Date.now();
         if (now - lastClickTime < 30) { triggerCheat(); return; }
@@ -220,9 +229,7 @@
     function logout() { location.reload(); }
     setInterval(() => { if(autoRate > 0 && !document.hidden) { energy += autoRate; update(); } }, 1000);
 
-    // Авто-вход если уже авторизован
     if (localStorage.getItem('tycoon_user')) {
-        // Оставляем на экране логина, но поле ника уже заполнено для удобства
         document.getElementById('name-input').value = localStorage.getItem('tycoon_user');
     }
 </script>
