@@ -3,52 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Energy Tycoon | Serv1ce465</title>
+    <title>Energy Tycoon | Serv1ce465 Pro</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f0f12; color: #fff; text-align: center; margin: 0; overflow-x: hidden; }
+        :root {
+            /* Темная тема (по умолчанию) */
+            --bg: #0f0f12;
+            --card: #1a1a20;
+            --text: #ffffff;
+            --border: #333;
+            --shadow: rgba(0,0,0,0.5);
+        }
+
+        .light-theme {
+            /* Светлая тема */
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #1a1a20;
+            --border: #ddd;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            transition: background 0.8s, color 0.8s; 
+            text-align: center; margin: 0; overflow-x: hidden; 
+        }
         
-        /* Экран авторизации */
+        /* Экраны */
         #auth-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, #1a1a20 0%, #0f0f12 100%);
-            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 1000;
         }
-        .auth-card {
-            background: #1a1a20; padding: 40px; border-radius: 20px;
-            border: 2px solid #4facfe; box-shadow: 0 0 30px rgba(79, 172, 254, 0.2);
-            width: 300px;
-        }
-        input {
-            padding: 12px; border-radius: 8px; border: 1px solid #333; background: #0f0f12;
-            color: white; margin-bottom: 20px; width: 100%; font-size: 1rem; box-sizing: border-box; outline: none;
-        }
-
-        /* Основной интерфейс */
         #game-screen { display: none; padding-bottom: 50px; }
-        .stats { background: #1a1a20; padding: 20px; display: flex; justify-content: center; gap: 30px; border-bottom: 2px solid #4facfe; font-size: 1.3rem; position: sticky; top: 0; z-index: 100; }
-        .energy-val { color: #00f2fe; font-weight: bold; }
-        .money-val { color: #44ff44; font-weight: bold; }
-        
-        .lightning { font-size: 8rem; cursor: pointer; user-select: none; margin: 20px; transition: transform 0.05s; filter: drop-shadow(0 0 20px #4facfe); }
-        .lightning:active { transform: scale(0.9); }
-        
-        .btn-sell { background: #44ff44; border: none; padding: 15px 40px; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; font-size: 1rem; }
 
-        .shop { display: flex; justify-content: center; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
-        .item { background: #1a1a20; padding: 15px; border-radius: 15px; border: 1px solid #333; width: 160px; }
+        /* Карточки и блоки */
+        .auth-card, .item, .stats-bar, .contact-section { 
+            background: var(--card); 
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px var(--shadow);
+            border-radius: 20px;
+        }
+
+        .auth-card { padding: 40px; width: 300px; border: 2px solid #4facfe; }
+        .stats-bar { display: flex; justify-content: center; gap: 30px; padding: 20px; border-radius: 0 0 20px 20px; position: sticky; top: 0; z-index: 100; border-top: none; }
+
+        input {
+            padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg);
+            color: var(--text); margin-bottom: 20px; width: 100%; box-sizing: border-box; outline: none;
+        }
+
+        /* Игровые элементы */
+        .energy-val { color: #00f2fe; font-weight: bold; text-shadow: 0 0 10px rgba(0,242,254,0.3); }
+        .money-val { color: #44ff44; font-weight: bold; text-shadow: 0 0 10px rgba(68,255,68,0.3); }
+        .lightning { font-size: 8rem; cursor: pointer; user-select: none; margin: 20px; transition: 0.1s; filter: drop-shadow(0 0 20px #4facfe); }
+        .lightning:active { transform: scale(0.85); }
+        
+        .btn-main { background: #44ff44; border: none; padding: 15px 40px; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; transition: 0.3s; }
+        .btn-main:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(68,255,68,0.4); }
+
+        .shop { display: flex; justify-content: center; gap: 15px; margin-top: 30px; flex-wrap: wrap; padding: 0 10px; }
+        .item { padding: 15px; width: 160px; }
         .buy-btn { background: #4facfe; border: none; color: #fff; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .buy-btn:disabled { background: #444; opacity: 0.5; cursor: not-allowed; }
 
-        /* Сообщение анти-чита */
         #cheat-msg { color: #ff4444; font-weight: bold; display: none; margin: 10px; }
 
-        /* Кнопка Telegram */
-        .contact-box { margin-top: 50px; padding: 20px; background: #16161a; border-top: 1px solid #333; }
-        .tg-link { 
-            background: #0088cc; color: #fff; padding: 12px 25px; 
-            text-decoration: none; border-radius: 8px; font-weight: bold; 
-            display: inline-block; transition: 0.3s; margin-top: 10px;
-        }
+        /* Связь */
+        .contact-section { margin-top: 50px; padding: 20px; display: inline-block; }
+        .tg-link { background: #0088cc; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 10px; transition: 0.3s; }
         .tg-link:hover { background: #00aaff; transform: translateY(-3px); }
     </style>
 </head>
@@ -56,57 +80,49 @@
 
     <div id="auth-screen">
         <div class="auth-card">
-            <h2 style="color:#4facfe">Energy Tycoon</h2>
-            <p>Введите ваше имя:</p>
-            <input type="text" id="name-input" placeholder="Никнейм..." maxlength="12">
-            <button class="buy-btn" id="login-btn" style="padding:15px">ВОЙТИ</button>
+            <h2 style="color: #4facfe;">Energy Tycoon</h2>
+            <p>Введите ник или промокод:</p>
+            <input type="text" id="name-input" placeholder="Имя..." maxlength="12">
+            <button class="buy-btn" id="login-btn" style="padding: 15px;">ВОЙТИ</button>
         </div>
     </div>
 
     <div id="game-screen">
-        <div class="stats">
-            <div>👤 <span id="p-name" style="color:#4facfe">...</span></div>
+        <div class="stats-bar">
+            <div>👤 <span id="p-name">...</span></div>
             <div>⚡ <span id="energy" class="energy-val">0</span></div>
             <div>💰 $<span id="money" class="money-val">0</span></div>
         </div>
 
-        <h2 id="rank" style="margin-top:20px">Ранг: Новичок</h2>
+        <h2 id="rank" style="margin-top: 30px;">Ранг: Новичок</h2>
         <div class="lightning" id="clicker">⚡</div>
         <div id="cheat-msg">АНТИ-ЧИТ: СЛИШКОМ БЫСТРО!</div>
-        
-        <button class="btn-sell" id="sell-all">ПРОДАТЬ ВСЮ ЭНЕРГИЮ</button>
+        <button class="btn-main" id="sell-all">ПРОДАТЬ ЭНЕРГИЮ</button>
 
         <div class="shop">
-            <div class="item">
-                <h4>Сила клика</h4>
-                <p>Цена: $<span id="c-cost">50</span></p>
-                <button class="buy-btn" id="buy-click">Улучшить</button>
-            </div>
-            <div class="item">
-                <h4>Ветряк</h4>
-                <p>Цена: $<span id="w-cost">10</span></p>
-                <button class="buy-btn" id="buy-wind">Купить</button>
-            </div>
-            <div class="item">
-                <h4>Солн. панель</h4>
-                <p>Цена: $<span id="s-cost">250</span></p>
-                <button class="buy-btn" id="buy-solar">Купить</button>
-            </div>
+            <div class="item"><h4>Клик</h4><p>$<span id="c-cost">50</span></p><button class="buy-btn" id="buy-click">Улучшить</button></div>
+            <div class="item"><h4>Ветряк</h4><p>$<span id="w-cost">10</span></p><button class="buy-btn" id="buy-wind">Купить</button></div>
+            <div class="item"><h4>Солнце</h4><p>$<span id="s-cost">250</span></p><button class="buy-btn" id="buy-solar">Купить</button></div>
         </div>
 
-        <div class="contact-box">
-            <p style="color:#888; margin:0">Понравилась игра?</p>
-            <h3 style="margin:5px 0">Я могу сделать такой же сайт для вас!</h3>
-            <a href="https://t.me/Serv1ce465?text=Здравствуйте!%20Я%20поиграл%20в%20вашу%20игру%20и%20хочу%20заказать%20похожий%20сайт." 
-               class="tg-link" target="_blank">
-               Написать в Telegram
-            </a>
+        <div class="contact-section">
+            <p style="margin:0; opacity: 0.7;">Нужен такой же сайт?</p>
+            <h3 style="margin: 5px 0;">Напишите мне!</h3>
+            <a href="https://t.me/Serv1ce465?text=Привет!%20Хочу%20заказать%20сайт." class="tg-link" target="_blank">Telegram</a>
         </div>
     </div>
 
 <script>
-    // Загрузка данных
-    let user = localStorage.getItem('tycoon_user');
+    // 1. Магия смены темы
+    function applyTheme() {
+        const hour = new Date().getHours();
+        if (hour >= 6 && hour < 20) {
+            document.body.classList.add('light-theme');
+        } else {
+            document.body.classList.remove('light-theme');
+        }
+    }
+
     let energy = Number(localStorage.getItem('en')) || 0;
     let money = Number(localStorage.getItem('mn')) || 0;
     let clickPower = Number(localStorage.getItem('cp')) || 1;
@@ -114,14 +130,20 @@
     let pClick = Number(localStorage.getItem('pC')) || 50;
     let pWind = Number(localStorage.getItem('pW')) || 10;
     let pSolar = Number(localStorage.getItem('pS')) || 250;
+    let user = localStorage.getItem('tycoon_user');
     let lastClick = 0;
 
-    // Вход
+    applyTheme();
     if (user) { start(); }
 
     document.getElementById('login-btn').onclick = () => {
         let val = document.getElementById('name-input').value.trim();
         if (val.length >= 2) {
+            // Проверка промокода
+            if (val.toUpperCase() === 'FREE1000') {
+                money += 1000;
+                val = "Читер 😎";
+            }
             user = val;
             localStorage.setItem('tycoon_user', user);
             start();
@@ -135,61 +157,44 @@
         update();
     }
 
-    function save() {
-        localStorage.setItem('en', energy);
-        localStorage.setItem('mn', money);
-        localStorage.setItem('cp', clickPower);
-        localStorage.setItem('ar', autoRate);
-        localStorage.setItem('pC', pClick);
-        localStorage.setItem('pW', pWind);
-        localStorage.setItem('pS', pSolar);
-    }
-
     function update() {
         document.getElementById('energy').innerText = Math.floor(energy);
         document.getElementById('money').innerText = money;
         document.getElementById('c-cost').innerText = pClick;
         document.getElementById('w-cost').innerText = pWind;
         document.getElementById('s-cost').innerText = pSolar;
-
+        
         document.getElementById('buy-click').disabled = money < pClick;
         document.getElementById('buy-wind').disabled = money < pWind;
         document.getElementById('buy-solar').disabled = money < pSolar;
 
         if(money > 1000) document.getElementById('rank').innerText = "Ранг: Электрик ⚡";
         if(money > 5000) document.getElementById('rank').innerText = "Ранг: Магнат 👑";
+        save();
     }
 
-    // Клик
+    function save() {
+        localStorage.setItem('en', energy); localStorage.setItem('mn', money);
+        localStorage.setItem('cp', clickPower); localStorage.setItem('ar', autoRate);
+        localStorage.setItem('pC', pClick); localStorage.setItem('pW', pWind); localStorage.setItem('pS', pSolar);
+    }
+
     document.getElementById('clicker').onclick = () => {
         let now = Date.now();
-        if (now - lastClick < 50) {
-            document.getElementById('cheat-msg').style.display = 'block';
-            return;
-        }
+        if (now - lastClick < 50) { document.getElementById('cheat-msg').style.display = 'block'; return; }
         document.getElementById('cheat-msg').style.display = 'none';
-        lastClick = now;
-        energy += clickPower;
-        update();
+        lastClick = now; energy += clickPower; update();
     };
 
     document.getElementById('sell-all').onclick = () => {
-        if(energy >= 1) { money += Math.floor(energy); energy = 0; save(); update(); }
+        if(energy >= 1) { money += Math.floor(energy); energy = 0; update(); }
     };
 
-    // Магазин
-    document.getElementById('buy-click').onclick = () => {
-        if(money >= pClick) { money -= pClick; clickPower++; pClick = Math.floor(pClick * 1.8); save(); update(); }
-    };
-    document.getElementById('buy-wind').onclick = () => {
-        if(money >= pWind) { money -= pWind; autoRate++; pWind = Math.floor(pWind * 1.5); save(); update(); }
-    };
-    document.getElementById('buy-solar').onclick = () => {
-        if(money >= pSolar) { money -= pSolar; autoRate += 5; pSolar = Math.floor(pSolar * 2); save(); update(); }
-    };
+    document.getElementById('buy-click').onclick = () => { if(money >= pClick) { money -= pClick; clickPower++; pClick *= 2; update(); } };
+    document.getElementById('buy-wind').onclick = () => { if(money >= pWind) { money -= pWind; autoRate++; pWind = Math.floor(pWind * 1.5); update(); } };
+    document.getElementById('buy-solar').onclick = () => { if(money >= pSolar) { money -= pSolar; autoRate += 5; pSolar *= 2; update(); } };
 
-    // Авто-майнинг
-    setInterval(() => { if(autoRate > 0) { energy += autoRate; update(); save(); } }, 1000);
+    setInterval(() => { if(autoRate > 0) { energy += autoRate; update(); } }, 1000);
 </script>
 </body>
 </html>
