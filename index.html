@@ -3,105 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Energy Tycoon | Final</title>
+    <title>Energy Tycoon | Serv1ce465 Edition</title>
     <style>
-        body { font-family: sans-serif; background: #0f0f12; color: #fff; text-align: center; margin: 0; }
-        #auth { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f12; display: flex; justify-content: center; align-items: center; z-index: 100; }
-        .card { background: #1a1a20; padding: 30px; border-radius: 15px; border: 2px solid #4facfe; }
-        input { padding: 10px; border-radius: 5px; border: none; width: 200px; margin-bottom: 10px; }
-        button { background: #4facfe; border: none; color: #fff; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        #game { display: none; padding: 20px; }
-        .stats { font-size: 1.5rem; margin-bottom: 20px; color: #00f2fe; }
-        .lightning { font-size: 7rem; cursor: pointer; user-select: none; transition: 0.1s; margin: 20px; }
-        .lightning:active { transform: scale(0.9); }
-        .shop { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-        .item { background: #1a1a20; padding: 10px; border-radius: 10px; border: 1px solid #333; width: 140px; }
-        .buy { width: 100%; margin-top: 5px; font-size: 0.8rem; }
+        /* Основные стили */
+        body { font-family: 'Segoe UI', sans-serif; background: #0f0f12; color: #fff; text-align: center; margin: 0; overflow-x: hidden; }
+        
+        /* Экран входа */
+        #auth-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #1a1a20 0%, #0f0f12 100%);
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .auth-card {
+            background: #1a1a20; padding: 40px; border-radius: 20px;
+            border: 2px solid #4facfe; box-shadow: 0 0 30px rgba(79, 172, 254, 0.2);
+            width: 300px;
+        }
+        input {
+            padding: 12px; border-radius: 8px; border: 1px solid #333; background: #0f0f12;
+            color: white; margin-bottom: 20px; width: 100%; font-size: 1rem; box-sizing: border-box; outline: none;
+        }
+        input:focus { border-color: #4facfe; }
+
+        /* Игровой экран */
+        #game-screen { display: none; padding-bottom: 50px; }
+        .stats-bar { background: #1a1a20; padding: 20px; display: flex; justify-content: center; gap: 30px; border-bottom: 2px solid #4facfe; font-size: 1.2rem; position: sticky; top: 0; z-index: 100; }
+        .energy-val { color: #00f2fe; font-weight: bold; text-shadow: 0 0 10px #00f2fe; }
+        .money-val { color: #44ff44; font-weight: bold; text-shadow: 0 0 10px #44ff44; }
+        
+        /* Главная молния */
+        .lightning { font-size: 8rem; cursor: pointer; user-select: none; margin: 20px; transition: transform 0.05s, filter 0.2s; filter: drop-shadow(0 0 20px #4facfe); }
+        .lightning:active { transform: scale(0.85); }
+        
+        .btn-action { background: #44ff44; border: none; padding: 15px 40px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.2s; color: #000; }
+        .btn-action:hover { background: #32d932; transform: scale(1.05); }
+
+        /* Магазин */
+        .shop { display: flex; justify-content: center; gap: 15px; margin-top: 30px; flex-wrap: wrap; padding: 0 20px; }
+        .item { background: #1a1a20; padding: 15px; border-radius: 15px; border: 1px solid #333; width: 160px; transition: 0.3s; }
+        .item:hover { border-color: #4facfe; transform: translateY(-5px); }
+        .buy-btn { background: #4facfe; border: none; color: #fff; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .buy-btn:disabled { background: #444; cursor: not-allowed; opacity: 0.5; }
+
+        /* Анти-чит и всплывашки */
+        #cheat-msg { color: #ff4444; font-weight: bold; display: none; margin-bottom: 10px; }
+        .pop { position: absolute; color: #00f2fe; font-weight: bold; pointer-events: none; animation: float 0.6s ease-out forwards; }
+        @keyframes float { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-80px); opacity: 0; } }
+
+        /* Блок связи */
+        .contact-section { margin-top: 60px; padding: 30px; background: #16161a; border-radius: 20px; display: inline-block; border: 1px solid #333; }
+        .tg-link { background: #0088cc; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; transition: 0.3s; margin-top: 15px; }
+        .tg-link:hover { background: #00aaff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 136, 204, 0.4); }
     </style>
 </head>
 <body>
 
-    <div id="auth">
-        <div class="card">
-            <h2>Вход в систему</h2>
-            <input type="text" id="nick" placeholder="Твой ник...">
-            <br>
-            <button id="start-btn">ПОЕХАЛИ</button>
+    <div id="auth-screen">
+        <div class="auth-card">
+            <h2 style="color: #4facfe; margin-top: 0;">Energy Tycoon</h2>
+            <p>Добро пожаловать! Как вас зовут?</p>
+            <input type="text" id="name-input" placeholder="Никнейм..." maxlength="12">
+            <button class="buy-btn" id="login-btn" style="padding: 15px;">НАЧАТЬ ИГРУ</button>
         </div>
     </div>
 
-    <div id="game">
-        <div class="stats">💰 $<span id="m-val">0</span> | ⚡ <span id="e-val">0</span></div>
-        <p>Игрок: <b id="u-name"></b></p>
+    <div id="game-screen">
+        <div class="stats-bar">
+            <div>👤 <span id="p-name" style="color: #4facfe;">Игрок</span></div>
+            <div>⚡ <span id="energy" class="energy-val">0</span></div>
+            <div>💰 $<span id="money" class="money-val">0</span></div>
+        </div>
+
+        <h2 id="rank" style="margin-top: 30px;">Ранг: Новичок</h2>
+        
         <div class="lightning" id="clicker">⚡</div>
-        <button id="sell" style="background:#44ff44; color:#000">ПРОДАТЬ ЭНЕРГИЮ</button>
+        <div id="cheat-msg">СЛИШКОМ БЫСТРО! (АНТИ-ЧИТ)</div>
+        
+        <button class="btn-action" id="sell-all">ПРОДАТЬ ВСЮ ЭНЕРГИЮ</button>
 
         <div class="shop">
-            <div class="item">Клик +1<br>$<span id="c-p">50</span><button class="buy" id="b-c">Улучшить</button></div>
-            <div class="item">Ветряк +1/с<br>$<span id="w-p">10</span><button class="buy" id="b-w">Купить</button></div>
-            <div class="item">Солнце +5/с<br>$<span id="s-p">250</span><button class="buy" id="b-s">Купить</button></div>
+            <div class="item">
+                <h4>Сила клика</h4>
+                <p>Клик: +<span id="c-pow">1</span></p>
+                <p>Цена: $<span id="c-cost">50</span></p>
+                <button class="buy-btn" id="buy-click">Улучшить</button>
+            </div>
+            <div class="item">
+                <h4>Ветряк</h4>
+                <p>+1 эд/сек</p>
+                <p>Цена: $<span id="w-cost">10</span></p>
+                <button class="buy-btn" id="buy-wind">Купить</button>
+            </div>
+            <div class="item">
+                <h4>Солн. панель</h4>
+                <p>+5 эд/сек</p>
+                <p>Цена: $<span id="s-cost">250</span></p>
+                <button class="buy-btn" id="buy-solar">Купить</button>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <p style="margin: 0; color: #888;">Понравилась игра?</p>
+            <h3 style="margin: 5px 0;">Я могу сделать такой же сайт для вас!</h3>
+            <a href="https://t.me/Serv1ce465?text=Здравствуйте!%20Я%20поиграл%20в%20вашу%20игру%20и%20хочу%20заказать%20похожий%20сайт." 
+               class="tg-link" target="_blank">
+               Написать в Telegram
+            </a>
         </div>
     </div>
 
-    <script>
-        let energy = Number(localStorage.getItem('en')) || 0;
-        let money = Number(localStorage.getItem('mn')) || 0;
-        let cPower = Number(localStorage.getItem('cp')) || 1;
-        let auto = Number(localStorage.getItem('ar')) || 0;
-        let pC = Number(localStorage.getItem('pC')) || 50;
-        let pW = Number(localStorage.getItem('pW')) || 10;
-        let pS = Number(localStorage.getItem('pS')) || 250;
-        let user = localStorage.getItem('user');
+<script>
+    // Инициализация данных из памяти
+    let user = localStorage.getItem('tycoon_user');
+    let energy = Number(localStorage.getItem('en')) || 0;
+    let money = Number(localStorage.getItem('mn')) || 0;
+    let clickPower = Number(localStorage.getItem('cp')) || 1;
+    let autoRate = Number(localStorage.getItem('ar')) || 0;
+    
+    let pClick = Number(localStorage.getItem('pC')) || 50;
+    let pWind = Number(localStorage.getItem('pW')) || 10;
+    let pSolar = Number(localStorage.getItem('pS')) || 250;
+    
+    let lastClick = 0;
 
-        if(user) showGame();
+    // Проверка авторизации
+    if (user) { startGame(); }
 
-        document.getElementById('start-btn').onclick = () => {
-            let name = document.getElementById('nick').value;
-            if(name.length > 1) {
-                user = name; localStorage.setItem('user', user); showGame();
-            }
-        };
+    document.getElementById('login-btn').onclick = () => {
+        let val = document.getElementById('name-input').value.trim();
+        if (val.length >= 2) {
+            user = val;
+            localStorage.setItem('tycoon_user', user);
+            startGame();
+        } else { alert("Пожалуйста, введите имя (мин. 2 символа)"); }
+    };
 
-        function showGame() {
-            document.getElementById('auth').style.display = 'none';
-            document.getElementById('game').style.display = 'block';
-            document.getElementById('u-name').innerText = user;
-            update();
+    function startGame() {
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        document.getElementById('p-name').innerText = user;
+        refreshUI();
+    }
+
+    function saveProgress() {
+        localStorage.setItem('en', energy);
+        localStorage.setItem('mn', money);
+        localStorage.setItem('cp', clickPower);
+        localStorage.setItem('ar', autoRate);
+        localStorage.setItem('pC', pClick);
+        localStorage.setItem('pW', pWind);
+        localStorage.setItem('pS', pSolar);
+    }
+
+    function refreshUI() {
+        document.getElementById('energy').innerText = Math.floor(energy);
+        document.getElementById('money').innerText = money;
+        document.getElementById('c-pow').innerText = clickPower;
+        document.getElementById('c-cost').innerText = pClick;
+        document.getElementById('w-cost').innerText = pWind;
+        document.getElementById('s-cost').innerText = pSolar;
+
+        // Блокировка кнопок
+        document.getElementById('buy-click').disabled = money < pClick;
+        document.getElementById('buy-wind').disabled = money < pWind;
+        document.getElementById('buy-solar').disabled = money < pSolar;
+
+        // Ранги
+        let r = "Новичок ⚡";
+        if(money > 1000) r = "Электрик 🔩";
+        if(money > 5000) r = "Магнат 👑";
+        if(money > 20000) r = "Энерго-Бог 🚀";
+        document.getElementById('rank').innerText = "Ранг: " + r;
+    }
+
+    // Обработка клика с Анти-читом
+    document.getElementById('clicker').onclick = (e) => {
+        let now = Date.now();
+        if (now - lastClick < 50) { // 20 кликов в сек лимит
+            document.getElementById('cheat-msg').style.display = 'block';
+            document.getElementById('clicker').style.filter = "drop-shadow(0 0 30px red)";
+            return;
         }
+        
+        document.getElementById('cheat-msg').style.display = 'none';
+        document.getElementById('clicker').style.filter = "drop-shadow(0 0 20px #4facfe)";
+        lastClick = now;
 
-        function update() {
-            document.getElementById('e-val').innerText = Math.floor(energy);
-            document.getElementById('m-val').innerText = money;
-            document.getElementById('c-p').innerText = pC;
-            document.getElementById('w-p').innerText = pW;
-            document.getElementById('s-p').innerText = pS;
-            save();
+        energy += clickPower;
+        
+        // Анимация цифр
+        let p = document.createElement('div');
+        p.className = 'pop';
+        p.innerText = "+" + clickPower;
+        p.style.left = e.pageX + 'px';
+        p.style.top = e.pageY + 'px';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 600);
+        
+        refreshUI();
+    };
+
+    // Продажа энергии
+    document.getElementById('sell-all').onclick = () => {
+        if(energy >= 1) {
+            money += Math.floor(energy);
+            energy = 0;
+            saveProgress();
+            refreshUI();
         }
+    };
 
-        function save() {
-            localStorage.setItem('en', energy); localStorage.setItem('mn', money);
-            localStorage.setItem('cp', cPower); localStorage.setItem('ar', auto);
-            localStorage.setItem('pC', pC); localStorage.setItem('pW', pW); localStorage.setItem('pS', pS);
+    // Покупки в магазине
+    document.getElementById('buy-click').onclick = () => {
+        if(money >= pClick) {
+            money -= pClick;
+            clickPower++;
+            pClick = Math.floor(pClick * 1.8);
+            saveProgress();
+            refreshUI();
         }
+    };
 
-        document.getElementById('clicker').onclick = () => { energy += cPower; update(); };
-        document.getElementById('sell').onclick = () => { money += Math.floor(energy); energy = 0; update(); };
+    document.getElementById('buy-wind').onclick = () => {
+        if(money >= pWind) {
+            money -= pWind;
+            autoRate++;
+            pWind = Math.floor(pWind * 1.6);
+            saveProgress();
+            refreshUI();
+        }
+    };
 
-        document.getElementById('b-c').onclick = () => {
-            if(money >= pC) { money -= pC; cPower++; pC *= 2; update(); }
-        };
-        document.getElementById('b-w').onclick = () => {
-            if(money >= pW) { money -= pW; auto++; pW = Math.floor(pW * 1.5); update(); }
-        };
-        document.getElementById('b-s').onclick = () => {
-            if(money >= pS) { money -= pS; auto += 5; pS *= 2; update(); }
-        };
+    document.getElementById('buy-solar').onclick = () => {
+        if(money >= pSolar) {
+            money -= pSolar;
+            autoRate += 5;
+            pSolar = Math.floor(pSolar * 2);
+            saveProgress();
+            refreshUI();
+        }
+    };
 
-        setInterval(() => { if(auto > 0) { energy += auto; update(); } }, 1000);
-    </script>
-    <div style="margin-top: 50px; padding: 20px; border-top: 1px solid #333;">
-    <p>Понравилась игра? Я могу сделать такой же сайт для вашего бизнеса!</p>
-    <a href="https://t.me/https://t.me/Serv1ce465" style="background: #0088cc; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Написать в Telegram</a>
-</div>
+    // Цикл автоматической добычи
+    setInterval(() => {
+        if(autoRate > 0) {
+            energy += autoRate;
+            refreshUI();
+            saveProgress();
+        }
+    }, 1000);
+
+    // Первичная отрисовка если зашли повторно
+    if(user) refreshUI();
+</script>
 </body>
 </html>
