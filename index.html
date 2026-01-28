@@ -30,7 +30,7 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Игровой экран */
+        /* Игровой интерфейс */
         #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         #game-screen { display: none; padding-bottom: 50px; }
         .auth-card, .item, .stats-bar, .contact-section { background: var(--card); border: 1px solid var(--border); box-shadow: 0 4px 15px var(--shadow); border-radius: 20px; }
@@ -51,16 +51,16 @@
 <body oncontextmenu="return false;">
 
     <div id="cheat-overlay">
-        <h1>АНТИ-ЧИТ ⛔</h1>
-        <p>Подозрительно точные клики. Бот обнаружен.</p>
-        <button class="btn-main" onclick="location.reload()">ПЕРЕЗАГРУЗИТЬ</button>
+        <h1>СИСТЕМА ЗАЩИТЫ ⛔</h1>
+        <p>Слишком много точных кликов в одну точку. Перезагрузите игру.</p>
+        <button class="btn-main" onclick="location.reload()">ОБНОВИТЬ</button>
     </div>
 
     <div id="auth-screen">
         <div class="auth-card">
             <h2 style="color: var(--accent);">Energy Tycoon</h2>
-            <input type="text" id="name-input" placeholder="Никнейм..." style="padding:12px; width:100%; margin-bottom:20px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
-            <button class="buy-btn" id="login-btn" style="padding: 15px;">ВОЙТИ</button>
+            <input type="text" id="name-input" placeholder="Ваше имя..." style="padding:12px; width:100%; margin-bottom:20px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+            <button class="buy-btn" id="login-btn" style="padding: 15px;">ИГРАТЬ</button>
         </div>
     </div>
 
@@ -89,12 +89,12 @@
         <div id="shop-discounts" class="tab-content">
             <div class="item" style="width: 300px;">
                 <h4>Магазин купонов</h4>
-                <p>Здесь будут скидки на ваши услуги.</p>
-                <p style="color: var(--accent);">Ждем настройки цен...</p>
+                <p>Скоро здесь появятся скидки на ваши услуги за игровую валюту!</p>
+                <p style="color: var(--accent);">Настройка цен в процессе...</p>
             </div>
         </div>
 
-        <div style="margin-top:40px;">
+        <div style="margin-top:40px; padding-bottom: 20px;">
             <a href="https://t.me/Serv1ce465" style="color: var(--accent); text-decoration: none; font-weight: bold;">Связаться с разработчиком</a>
         </div>
     </div>
@@ -109,11 +109,11 @@
     let pSolar = Number(localStorage.getItem('pS')) || 250;
     let user = localStorage.getItem('tycoon_user');
 
-    // Логика Анти-чита (смягченная)
+    // Анти-чит переменные
     let lastClickTime = 0;
     let lastX = 0;
     let lastY = 0;
-    let samePointClicks = 0; // Счетчик кликов в одну точку
+    let samePointClicks = 0;
 
     function openTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -134,6 +134,8 @@
         document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'block';
         document.getElementById('p-name').innerText = user;
+        const hour = new Date().getHours();
+        if (hour >= 6 && hour < 20) document.body.classList.add('light-theme');
         update();
     }
 
@@ -158,19 +160,15 @@
     document.getElementById('clicker').onclick = (e) => {
         let now = Date.now();
         
-        // 1. Проверка на слишком высокую скорость (менее 30мс)
-        if (now - lastClickTime < 30) {
-            triggerCheat(); return;
-        }
+        // 1. Проверка скорости (менее 30мс)
+        if (now - lastClickTime < 30) { triggerCheat(); return; }
 
-        // 2. Проверка на клики в одну точку (допустимо 15 подряд)
+        // 2. Проверка точности (лимит увеличен до 40 кликов в одну точку)
         if (e.clientX === lastX && e.clientY === lastY) {
             samePointClicks++;
-            if (samePointClicks > 15) {
-                triggerCheat(); return;
-            }
+            if (samePointClicks > 40) { triggerCheat(); return; }
         } else {
-            samePointClicks = 0; // Сброс если точка сменилась
+            samePointClicks = 0;
         }
 
         lastClickTime = now; lastX = e.clientX; lastY = e.clientY;
