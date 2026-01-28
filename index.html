@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Tycoon | Final</title>
+    <style>
+        body { font-family: sans-serif; background: #0f0f12; color: #fff; text-align: center; margin: 0; }
+        #auth { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f12; display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .card { background: #1a1a20; padding: 30px; border-radius: 15px; border: 2px solid #4facfe; }
+        input { padding: 10px; border-radius: 5px; border: none; width: 200px; margin-bottom: 10px; }
+        button { background: #4facfe; border: none; color: #fff; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #game { display: none; padding: 20px; }
+        .stats { font-size: 1.5rem; margin-bottom: 20px; color: #00f2fe; }
+        .lightning { font-size: 7rem; cursor: pointer; user-select: none; transition: 0.1s; margin: 20px; }
+        .lightning:active { transform: scale(0.9); }
+        .shop { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        .item { background: #1a1a20; padding: 10px; border-radius: 10px; border: 1px solid #333; width: 140px; }
+        .buy { width: 100%; margin-top: 5px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <div id="auth">
+        <div class="card">
+            <h2>Вход в систему</h2>
+            <input type="text" id="nick" placeholder="Твой ник...">
+            <br>
+            <button id="start-btn">ПОЕХАЛИ</button>
+        </div>
+    </div>
+
+    <div id="game">
+        <div class="stats">💰 $<span id="m-val">0</span> | ⚡ <span id="e-val">0</span></div>
+        <p>Игрок: <b id="u-name"></b></p>
+        <div class="lightning" id="clicker">⚡</div>
+        <button id="sell" style="background:#44ff44; color:#000">ПРОДАТЬ ЭНЕРГИЮ</button>
+
+        <div class="shop">
+            <div class="item">Клик +1<br>$<span id="c-p">50</span><button class="buy" id="b-c">Улучшить</button></div>
+            <div class="item">Ветряк +1/с<br>$<span id="w-p">10</span><button class="buy" id="b-w">Купить</button></div>
+            <div class="item">Солнце +5/с<br>$<span id="s-p">250</span><button class="buy" id="b-s">Купить</button></div>
+        </div>
+    </div>
+
+    <script>
+        let energy = Number(localStorage.getItem('en')) || 0;
+        let money = Number(localStorage.getItem('mn')) || 0;
+        let cPower = Number(localStorage.getItem('cp')) || 1;
+        let auto = Number(localStorage.getItem('ar')) || 0;
+        let pC = Number(localStorage.getItem('pC')) || 50;
+        let pW = Number(localStorage.getItem('pW')) || 10;
+        let pS = Number(localStorage.getItem('pS')) || 250;
+        let user = localStorage.getItem('user');
+
+        if(user) showGame();
+
+        document.getElementById('start-btn').onclick = () => {
+            let name = document.getElementById('nick').value;
+            if(name.length > 1) {
+                user = name; localStorage.setItem('user', user); showGame();
+            }
+        };
+
+        function showGame() {
+            document.getElementById('auth').style.display = 'none';
+            document.getElementById('game').style.display = 'block';
+            document.getElementById('u-name').innerText = user;
+            update();
+        }
+
+        function update() {
+            document.getElementById('e-val').innerText = Math.floor(energy);
+            document.getElementById('m-val').innerText = money;
+            document.getElementById('c-p').innerText = pC;
+            document.getElementById('w-p').innerText = pW;
+            document.getElementById('s-p').innerText = pS;
+            save();
+        }
+
+        function save() {
+            localStorage.setItem('en', energy); localStorage.setItem('mn', money);
+            localStorage.setItem('cp', cPower); localStorage.setItem('ar', auto);
+            localStorage.setItem('pC', pC); localStorage.setItem('pW', pW); localStorage.setItem('pS', pS);
+        }
+
+        document.getElementById('clicker').onclick = () => { energy += cPower; update(); };
+        document.getElementById('sell').onclick = () => { money += Math.floor(energy); energy = 0; update(); };
+
+        document.getElementById('b-c').onclick = () => {
+            if(money >= pC) { money -= pC; cPower++; pC *= 2; update(); }
+        };
+        document.getElementById('b-w').onclick = () => {
+            if(money >= pW) { money -= pW; auto++; pW = Math.floor(pW * 1.5); update(); }
+        };
+        document.getElementById('b-s').onclick = () => {
+            if(money >= pS) { money -= pS; auto += 5; pS *= 2; update(); }
+        };
+
+        setInterval(() => { if(auto > 0) { energy += auto; update(); } }, 1000);
+    </script>
+</body>
+</html>
