@@ -3,57 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Energy Tycoon | Digital Hub</title>
+    <title>Digital Hub | Secure Edition</title>
     <style>
         :root {
             --bg: #0f0f12; --card: #1a1a20; --text: #ffffff; --border: #333; --shadow: rgba(0,0,0,0.5);
-            --accent: #4facfe; --discount-color: #ffcc00;
+            --accent: #4facfe; --discount-color: #ffcc00; --error: #ff4444;
         }
         .light-theme {
             --bg: #f0f2f5; --card: #ffffff; --text: #1a1a20; --border: #ddd; --shadow: rgba(0,0,0,0.1);
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.5s; text-align: center; margin: 0; overflow-x: hidden; user-select: none; }
 
-        /* Навигация */
-        .tabs-nav { display: flex; justify-content: center; gap: 10px; margin: 20px 0; padding: 0 10px; }
-        .tab-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: bold; flex: 1; max-width: 150px; transition: 0.3s; }
-        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        /* Авторизация */
+        #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .auth-card { padding: 40px; width: 300px; background: var(--card); border: 2px solid var(--accent); border-radius: 20px; box-shadow: 0 4px 20px var(--shadow); }
+        .auth-input { padding: 12px; width: 100%; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); box-sizing: border-box; }
+        #auth-msg { color: var(--error); font-size: 0.8rem; margin-bottom: 10px; min-height: 1.2rem; }
 
+        /* Вкладки */
+        .tabs-nav { display: flex; justify-content: center; gap: 8px; margin: 20px 0; padding: 0 10px; }
+        .tab-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: bold; flex: 1; max-width: 120px; transition: 0.3s; }
+        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
         .tab-content { display: none; animation: fadeIn 0.3s ease; flex-direction: column; align-items: center; }
         .tab-content.active { display: flex; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Игровые элементы */
-        #game-screen { padding-bottom: 50px; }
-        .stats-bar { display: flex; justify-content: center; gap: 30px; padding: 20px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        /* Геймплей */
+        .stats-bar { display: flex; justify-content: center; gap: 20px; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .lightning { font-size: 6rem; cursor: pointer; margin: 15px; transition: 0.1s; filter: drop-shadow(0 0 20px var(--accent)); }
+        .btn-main { background: #44ff44; border: none; padding: 12px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; color: #000; }
         
-        .lightning { font-size: 8rem; cursor: pointer; margin: 20px; transition: 0.1s; filter: drop-shadow(0 0 20px var(--accent)); display: inline-block; }
-        .lightning:active { transform: scale(0.9); }
-        .btn-main { background: #44ff44; border: none; padding: 15px 40px; border-radius: 15px; font-weight: bold; cursor: pointer; color: #000; font-size: 1.1rem; }
+        .shop-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 10px; }
+        .item, .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 15px; }
+        .item { width: 140px; }
+        .service-card { width: 90%; max-width: 400px; text-align: left; margin-bottom: 10px; }
         
-        .shop-grid { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; padding: 20px; }
-        .item, .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; transition: 0.3s; }
-        .item { width: 160px; }
-        .service-card { width: 90%; max-width: 450px; text-align: left; margin-bottom: 15px; }
-        
-        .buy-btn { background: var(--accent); border: none; color: #fff; padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .buy-btn { background: var(--accent); border: none; color: #fff; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .buy-btn:disabled { background: #444; opacity: 0.5; }
 
-        .discount-badge { background: var(--discount-color); color: #000; font-weight: bold; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block; }
         #cheat-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="cheat-overlay">
-        <h1>СИСТЕМА ЗАЩИТЫ ⛔</h1>
+        <h1>ЗАЩИТА ⛔</h1>
         <button class="btn-main" onclick="location.reload()">ОБНОВИТЬ</button>
     </div>
 
-    <div id="game-screen" style="display: block;">
+    <div id="auth-screen">
+        <div class="auth-card">
+            <h2 style="color: var(--accent); margin-top:0;">Вход в систему</h2>
+            <div id="auth-msg"></div>
+            <input type="text" id="name-input" class="auth-input" placeholder="Никнейм">
+            <input type="password" id="pass-input" class="auth-input" placeholder="Пароль">
+            <button class="buy-btn" id="login-btn" style="padding: 15px;">ВОЙТИ / СОЗДАТЬ</button>
+            <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 15px;">Один аккаунт на одно устройство</p>
+        </div>
+    </div>
+
+    <div id="game-screen" style="display:none;">
         <div class="stats-bar">
-            <div>👤 <span id="p-name">ZeroSalex</span></div>
+            <div>👤 <span id="p-name">...</span></div>
             <div>⚡ <span id="energy">0</span></div>
             <div>💰 $<span id="money">0</span></div>
         </div>
@@ -66,100 +78,98 @@
 
         <div id="tab-play" class="tab-content active">
             <div class="lightning" id="clicker">⚡</div>
-            <br>
             <button class="btn-main" id="sell-all">ПРОДАТЬ ЭНЕРГИЮ</button>
         </div>
 
         <div id="tab-upgrades" class="tab-content">
-            <h2 style="color: var(--accent);">Улучшения</h2>
             <div class="shop-grid">
-                <div class="item"><h4>Клик +1</h4><p>$<span id="c-cost">50</span></p><button class="buy-btn" id="buy-click">Улучшить</button></div>
+                <div class="item"><h4>Клик</h4><p>$<span id="c-cost">50</span></p><button class="buy-btn" id="buy-click">Улучшить</button></div>
                 <div class="item"><h4>Ветряк</h4><p>$<span id="w-cost">10</span></p><button class="buy-btn" id="buy-wind">Купить</button></div>
             </div>
-            
-            <h2 style="color: var(--discount-color);">Магазин купонов</h2>
+            <h3 style="color: var(--discount-color);">Купоны на скидку</h3>
             <div class="shop-grid">
-                <div class="item" style="width: 200px;">
-                    <div class="discount-badge">КУПОН #1</div>
-                    <p>Скидка 15% на сайт</p>
-                    <p><b>$25000</b></p>
-                    <button class="buy-btn" id="buy-d1">Купить</button>
-                </div>
-                <div class="item" style="width: 200px;">
-                    <div class="discount-badge">КУПОН #2</div>
-                    <p>Скидка 15% на бота</p>
-                    <p><b>$25000</b></p>
-                    <button class="buy-btn" id="buy-d2">Купить</button>
-                </div>
+                <div class="item"><h4>Скидка 15%</h4><p>$25000</p><button class="buy-btn" id="buy-d1">КУПИТЬ</button></div>
+                <div class="item"><h4>Скидка 15%</h4><p>$25000</p><button class="buy-btn" id="buy-d2">КУПИТЬ</button></div>
             </div>
         </div>
 
         <div id="tab-services" class="tab-content">
             <div class="service-card">
-                <h3 style="margin-top:0">Сайт под ключ</h3>
-                <p>Разработка современного лендинга или многостраничного сайта.</p>
-                <p><b>Цена:</b> <span id="price-site">5 000 руб.</span></p>
-                <a href="https://t.me/Serv1ce465" class="buy-btn" style="text-decoration:none; display:block; text-align:center">Обсудить проект</a>
-            </div>
-            <div class="service-card">
-                <h3 style="margin-top:0">Telegram Бот</h3>
-                <p>Создание ботов любой сложности для вашего бизнеса.</p>
-                <p><b>Цена:</b> <span id="price-bot">3 000 руб.</span></p>
-                <a href="https://t.me/Serv1ce465" class="buy-btn" style="text-decoration:none; display:block; text-align:center">Заказать бота</a>
+                <h3>Сайт под ключ</h3>
+                <p id="price-site">Цена: 5 000 руб.</p>
+                <a href="https://t.me/Serv1ce465" class="buy-btn" style="text-decoration:none; display:block; text-align:center">Заказать</a>
             </div>
         </div>
-
-        <div style="margin-top:50px;">
-            <a href="https://t.me/Serv1ce465" style="color: var(--accent); text-decoration: none; font-weight: bold;">Связаться с разработчиком</a>
-        </div>
+        
+        <button onclick="logout()" style="background:none; border:none; color:gray; cursor:pointer; margin-top:20px;">Выйти из аккаунта</button>
     </div>
 
 <script>
-    // Загрузка данных
-    let energy = Number(localStorage.getItem('en')) || 0;
-    let money = Number(localStorage.getItem('mn')) || 0;
-    let clickPower = Number(localStorage.getItem('cp')) || 1;
-    let autoRate = Number(localStorage.getItem('ar')) || 0;
-    let pClick = Number(localStorage.getItem('pC')) || 50;
-    let pWind = Number(localStorage.getItem('pW')) || 10;
-    let d1_bought = localStorage.getItem('d1') === 'true';
-    let d2_bought = localStorage.getItem('d2') === 'true';
+    let energy, money, clickPower, autoRate, pClick, pWind, user, d1_bought, d2_bought;
+    let lastClickTime = 0, lastX = 0, lastY = 0, samePointClicks = 0;
 
-    // Анти-чит
-    let lastClickTime = 0; let lastX = 0; let lastY = 0; let samePointClicks = 0;
+    // СИСТЕМА ЛОГИНА
+    const loginBtn = document.getElementById('login-btn');
+    const authMsg = document.getElementById('auth-msg');
 
-    function openTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        document.getElementById('btn-' + tabId.split('-')[1]).classList.add('active');
+    loginBtn.onclick = () => {
+        const name = document.getElementById('name-input').value.trim();
+        const pass = document.getElementById('pass-input').value.trim();
+        const localUser = localStorage.getItem('tycoon_user');
+        const localPass = localStorage.getItem('tycoon_pass');
+
+        if (name.length < 3 || pass.length < 4) {
+            authMsg.innerText = "Ник от 3 симв., пароль от 4 симв.";
+            return;
+        }
+
+        // Если аккаунт уже создан на этом устройстве
+        if (localUser && localUser !== name) {
+            authMsg.innerText = "На этом устройстве уже есть аккаунт: " + localUser;
+            return;
+        }
+
+        // Если это вход в существующий аккаунт
+        if (localUser === name) {
+            if (localPass === pass) {
+                user = name; start();
+            } else {
+                authMsg.innerText = "Неверный пароль!";
+            }
+        } 
+        // Если это создание нового аккаунта
+        else {
+            user = name;
+            localStorage.setItem('tycoon_user', name);
+            localStorage.setItem('tycoon_pass', pass);
+            initNewGame();
+            start();
+        }
+    };
+
+    function initNewGame() {
+        energy = 0; money = 0; clickPower = 1; autoRate = 0; pClick = 50; pWind = 10;
+        d1_bought = false; d2_bought = false;
+        save();
     }
 
-    function update() {
-        document.getElementById('energy').innerText = Math.floor(energy);
-        document.getElementById('money').innerText = money;
-        document.getElementById('c-cost').innerText = pClick;
-        document.getElementById('w-cost').innerText = pWind;
+    function start() {
+        loadData();
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'block';
+        document.getElementById('p-name').innerText = user;
+        update();
+    }
 
-        // Кнопки покупок
-        document.getElementById('buy-click').disabled = money < pClick;
-        document.getElementById('buy-wind').disabled = money < pWind;
-
-        // Логика купонов
-        const b1 = document.getElementById('buy-d1');
-        const b2 = document.getElementById('buy-d2');
-        
-        if(d1_bought) { 
-            b1.innerText = "КУПЛЕНО"; b1.disabled = true;
-            document.getElementById('price-site').innerHTML = "<s>5 000</s> <span style='color:#44ff44'>4 250 руб.</span>";
-        } else { b1.disabled = money < 25000; }
-
-        if(d2_bought) { 
-            b2.innerText = "КУПЛЕНО"; b2.disabled = true;
-            document.getElementById('price-bot').innerHTML = "<s>3 000</s> <span style='color:#44ff44'>2 550 руб.</span>";
-        } else { b2.disabled = money < 25000; }
-
-        save();
+    function loadData() {
+        energy = Number(localStorage.getItem('en')) || 0;
+        money = Number(localStorage.getItem('mn')) || 0;
+        clickPower = Number(localStorage.getItem('cp')) || 1;
+        autoRate = Number(localStorage.getItem('ar')) || 0;
+        pClick = Number(localStorage.getItem('pC')) || 50;
+        pWind = Number(localStorage.getItem('pW')) || 10;
+        d1_bought = localStorage.getItem('d1') === 'true';
+        d2_bought = localStorage.getItem('d2') === 'true';
     }
 
     function save() {
@@ -169,35 +179,52 @@
         localStorage.setItem('d1', d1_bought); localStorage.setItem('d2', d2_bought);
     }
 
+    function update() {
+        document.getElementById('energy').innerText = Math.floor(energy);
+        document.getElementById('money').innerText = money;
+        document.getElementById('c-cost').innerText = pClick;
+        document.getElementById('w-cost').innerText = pWind;
+        document.getElementById('buy-click').disabled = money < pClick;
+        document.getElementById('buy-wind').disabled = money < pWind;
+        
+        const b1 = document.getElementById('buy-d1');
+        if(d1_bought) { b1.innerText = "ЕСТЬ"; b1.disabled = true; document.getElementById('price-site').innerText = "Цена: 4 250 руб. (Скидка 15%)"; }
+        else { b1.disabled = money < 25000; }
+        
+        save();
+    }
+
+    // Остальная логика игры (клики, табы)
     document.getElementById('clicker').onclick = (e) => {
         let now = Date.now();
         if (now - lastClickTime < 30) { triggerCheat(); return; }
-        if (e.clientX === lastX && e.clientY === lastY) {
-            samePointClicks++; if (samePointClicks > 40) { triggerCheat(); return; }
-        } else { samePointClicks = 0; }
+        if (e.clientX === lastX && e.clientY === lastY) { samePointClicks++; if (samePointClicks > 40) { triggerCheat(); return; } } 
+        else { samePointClicks = 0; }
         lastClickTime = now; lastX = e.clientX; lastY = e.clientY;
         energy += clickPower; update();
     };
 
-    function triggerCheat() {
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('cheat-overlay').style.display = 'flex';
-    }
-
+    function triggerCheat() { document.getElementById('game-screen').style.display = 'none'; document.getElementById('cheat-overlay').style.display = 'flex'; }
     document.getElementById('sell-all').onclick = () => { if(energy >= 1) { money += Math.floor(energy); energy = 0; update(); } };
     document.getElementById('buy-click').onclick = () => { if(money >= pClick) { money -= pClick; clickPower++; pClick *= 2; update(); } };
     document.getElementById('buy-wind').onclick = () => { if(money >= pWind) { money -= pWind; autoRate++; pWind = Math.floor(pWind * 1.5); update(); } };
-    
     document.getElementById('buy-d1').onclick = () => { if(!d1_bought && money >= 25000) { money -= 25000; d1_bought = true; update(); } };
-    document.getElementById('buy-d2').onclick = () => { if(!d2_bought && money >= 25000) { money -= 25000; d2_bought = true; update(); } };
 
+    function openTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.getElementById('btn-' + tabId.replace('tab-', '')).classList.add('active');
+    }
+
+    function logout() { location.reload(); }
     setInterval(() => { if(autoRate > 0 && !document.hidden) { energy += autoRate; update(); } }, 1000);
-    
-    // Темная/светлая тема по времени
-    const hour = new Date().getHours();
-    if (hour >= 6 && hour < 20) document.body.classList.add('light-theme');
-    
-    update();
+
+    // Авто-вход если уже авторизован
+    if (localStorage.getItem('tycoon_user')) {
+        // Оставляем на экране логина, но поле ника уже заполнено для удобства
+        document.getElementById('name-input').value = localStorage.getItem('tycoon_user');
+    }
 </script>
 </body>
 </html>
