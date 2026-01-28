@@ -7,7 +7,7 @@
     <style>
         :root {
             --bg: #0f0f12; --card: #1a1a20; --text: #ffffff; --border: #333;
-            --accent: #4facfe; --green: #44ff44; --gray: #888; --red: #ff4444;
+            --accent: #4facfe; --green: #44ff44; --gray: #888;
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); text-align: center; margin: 0; user-select: none; }
 
@@ -35,17 +35,17 @@
         .main-controls { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
         .btn-sell { background: var(--green); border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; color: #000; font-size: 1rem; }
         
-        /* Кнопки улучшения на главной */
         .upgrade-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
         .up-btn { background: var(--card); border: 1px solid var(--accent); color: #fff; padding: 12px 5px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: 0.2s; }
         .up-btn:disabled { opacity: 0.4; border-color: var(--border); cursor: not-allowed; }
         .up-btn span { display: block; color: var(--green); font-size: 0.7rem; }
 
-        /* Карточки портфолио и услуг */
+        /* Портфолио и Услуги */
         .grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 450px; }
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 20px; text-align: left; border-left: 5px solid var(--accent); position: relative; }
         .card h3 { margin: 0 0 8px 0; color: var(--accent); font-size: 1.1rem; }
         .card p { margin: 0; font-size: 0.9rem; color: #ccc; }
+        .price-tag { color: var(--green); font-weight: bold; margin-top: 5px; display: block; }
         .buy-btn { background: var(--accent); border: none; color: #fff; padding: 12px; width: 100%; border-radius: 12px; cursor: pointer; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-top: 15px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -75,21 +75,12 @@
 
         <div id="tab-play" class="tab-content active">
             <div class="lightning" onclick="clickEnergy()">⚡</div>
-            
             <div class="main-controls">
                 <button class="btn-sell" onclick="sellEnergy()">ПРОДАТЬ ЭНЕРГИЮ</button>
-                
                 <div class="upgrade-row">
-                    <button class="up-btn" id="up-click" onclick="buyUpgrade('click')">
-                        +1 Клик
-                        <span id="cost-click">$50</span>
-                    </button>
-                    <button class="up-btn" id="up-auto" onclick="buyUpgrade('auto')">
-                        +1 Авто
-                        <span id="cost-auto">$150</span>
-                    </button>
+                    <button class="up-btn" id="up-click" onclick="buyUpgrade('click')">+1 Клик <span id="cost-click">$50</span></button>
+                    <button class="up-btn" id="up-auto" onclick="buyUpgrade('auto')">+1 Авто <span id="cost-auto">$150</span></button>
                 </div>
-                
                 <div style="margin-top: 10px; font-size: 0.8rem; color: var(--gray);">
                     Сила клика: <span id="p-power">1</span> | Авто-добыча: <span id="a-power">0</span>/с
                 </div>
@@ -107,9 +98,10 @@
         <div id="tab-services" class="tab-content">
             <div class="grid">
                 <div class="card">
-                    <h3>Заказать сайт/бота</h3>
-                    <p>Пишите для обсуждения вашего проекта.</p>
-                    <a href="https://t.me/Serv1ce465" target="_blank" class="buy-btn">Telegram</a>
+                    <h3>Заказать разработку</h3>
+                    <p>Создание лендингов и Telegram-ботов под ключ.</p>
+                    <span class="price-tag">Цена: от 2 000 руб.</span>
+                    <a href="https://t.me/Serv1ce465" target="_blank" class="buy-btn">Обсудить проект</a>
                 </div>
             </div>
         </div>
@@ -131,13 +123,9 @@
 
     function buyUpgrade(type) {
         if(type === 'click' && money >= costClick) {
-            money -= costClick;
-            clickPower++;
-            costClick = Math.floor(costClick * 1.8);
+            money -= costClick; clickPower++; costClick = Math.floor(costClick * 1.8);
         } else if(type === 'auto' && money >= costAuto) {
-            money -= costAuto;
-            autoPower++;
-            costAuto = Math.floor(costAuto * 2.2);
+            money -= costAuto; autoPower++; costAuto = Math.floor(costAuto * 2.2);
         }
         update();
     }
@@ -149,8 +137,6 @@
         document.getElementById('a-power').innerText = autoPower;
         document.getElementById('cost-click').innerText = "$" + costClick;
         document.getElementById('cost-auto').innerText = "$" + costAuto;
-        
-        // Отключаем кнопки, если не хватает денег
         document.getElementById('up-click').disabled = money < costClick;
         document.getElementById('up-auto').disabled = money < costAuto;
     }
@@ -162,13 +148,7 @@
         document.getElementById('btn-' + id.split('-')[1]).classList.add('active');
     }
 
-    // Цикл авто-кликера
-    setInterval(() => {
-        if(autoPower > 0) {
-            energy += autoPower;
-            update();
-        }
-    }, 1000);
+    setInterval(() => { if(autoPower > 0) { energy += autoPower; update(); } }, 1000);
 </script>
 </body>
 </html>
