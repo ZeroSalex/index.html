@@ -11,15 +11,15 @@
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); text-align: center; margin: 0; user-select: none; }
 
-        /* Экран входа - ЧИСТЫЙ (без Serv1ce465) */
+        /* Экран входа */
         #auth-screen { position: fixed; inset: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .auth-card { padding: 30px; width: 280px; background: var(--card); border: 1px solid var(--border); border-radius: 24px; }
         .brand-logo { width: 80px; height: 80px; margin-bottom: 20px; }
         .auth-input { padding: 12px; width: 100%; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--border); background: #000; color: #fff; text-align: center; box-sizing: border-box; }
 
-        /* Навигация - ТЕПЕРЬ ВИДНО КНОПКИ */
-        .tabs-nav { display: flex; justify-content: center; gap: 10px; margin: 15px auto; padding: 0 15px; max-width: 500px; }
-        .tab-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.2s; }
+        /* Навигация */
+        .tabs-nav { display: flex; justify-content: center; gap: 8px; margin: 15px auto; padding: 0 10px; max-width: 500px; }
+        .tab-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: bold; flex: 1; font-size: 0.9rem; }
         .tab-btn.active { background: var(--accent); border-color: var(--accent); }
         
         .tab-content { display: none; flex-direction: column; align-items: center; padding: 20px; }
@@ -27,11 +27,18 @@
 
         /* Геймплей */
         .stats-bar { display: flex; justify-content: center; gap: 20px; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); font-weight: bold; }
-        .lightning { font-size: 7rem; cursor: pointer; margin: 30px; filter: drop-shadow(0 0 20px var(--accent)); }
-        .btn-main { background: var(--green); border: none; padding: 18px 40px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        .lightning { font-size: 6rem; cursor: pointer; margin: 20px; filter: drop-shadow(0 0 20px var(--accent)); }
+        .btn-main { background: var(--green); border: none; padding: 15px 30px; border-radius: 15px; font-weight: bold; cursor: pointer; width: 100%; max-width: 250px; margin-bottom: 20px; }
         
+        /* Улучшения */
+        .upgrade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 400px; }
+        .up-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 15px; }
+        .up-card h4 { margin: 0 0 10px 0; font-size: 0.9rem; }
+        .up-btn { background: var(--accent); border: none; color: #fff; padding: 8px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .up-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
         .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; width: 100%; max-width: 380px; text-align: left; margin-bottom: 15px; border-left: 5px solid var(--accent); }
-        .buy-btn { background: var(--accent); border: none; color: #fff; padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-top: 10px; }
+        .buy-btn { background: var(--accent); border: none; color: #fff; padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold; text-decoration: none; display: block; text-align: center; }
     </style>
 </head>
 <body>
@@ -39,8 +46,8 @@
     <div id="auth-screen">
         <div class="auth-card">
             <img src="https://img.icons8.com/fluency/100/code-file.png" class="brand-logo">
-            <input type="text" id="name-input" class="auth-input" placeholder="Введите ваш ник">
-            <button class="buy-btn" onclick="login()">НАЧАТЬ</button>
+            <input type="text" id="name-input" class="auth-input" placeholder="Твой ник">
+            <button class="buy-btn" onclick="login()">ИГРАТЬ</button>
         </div>
     </div>
 
@@ -53,6 +60,7 @@
 
         <div class="tabs-nav">
             <button class="tab-btn active" id="btn-play" onclick="openTab('tab-play')">Игра</button>
+            <button class="tab-btn" id="btn-shop" onclick="openTab('tab-shop')">Улучшения</button>
             <button class="tab-btn" id="btn-services" onclick="openTab('tab-services')">Услуги</button>
         </div>
 
@@ -61,22 +69,38 @@
             <button class="btn-main" onclick="sellEnergy()">ПРОДАТЬ ЭНЕРГИЮ</button>
         </div>
 
+        <div id="tab-shop" class="tab-content">
+            <div class="upgrade-grid">
+                <div class="up-card">
+                    <h4>Клик +1</h4>
+                    <p>$<span id="c-cost">50</span></p>
+                    <button class="up-btn" id="up-c" onclick="buyClick()">UP</button>
+                </div>
+                <div class="up-card">
+                    <h4>Авто-майнер</h4>
+                    <p>$<span id="a-cost">100</span></p>
+                    <button class="up-btn" id="up-a" onclick="buyAuto()">BUY</button>
+                </div>
+            </div>
+        </div>
+
         <div id="tab-services" class="tab-content">
             <div class="service-card">
-                <h3>Сайты на заказ</h3>
-                <p>Быстрые лендинги и веб-сервисы.</p>
+                <h3>Веб-сайты</h3>
+                <p>Лендинги и сервисы.</p>
                 <a href="https://t.me/Serv1ce465" target="_blank" class="buy-btn">Заказать</a>
             </div>
             <div class="service-card">
-                <h3>Бот-мейкинг</h3>
-                <p>Telegram боты любой сложности.</p>
+                <h3>TG Боты</h3>
+                <p>Автоматизация в Telegram.</p>
                 <a href="https://t.me/Serv1ce465" target="_blank" class="buy-btn">Заказать</a>
             </div>
         </div>
     </div>
 
 <script>
-    let energy = 0, money = 0;
+    let energy = 0, money = 0, clickPower = 1, autoPower = 0;
+    let costClick = 50, costAuto = 100;
 
     function login() {
         let name = document.getElementById('name-input').value;
@@ -86,11 +110,34 @@
         document.getElementById('game-screen').style.display = 'block';
     }
 
-    function clickEnergy() { energy++; update(); }
+    function clickEnergy() { energy += clickPower; update(); }
     function sellEnergy() { money += energy; energy = 0; update(); }
+
+    function buyClick() {
+        if(money >= costClick) {
+            money -= costClick;
+            clickPower++;
+            costClick *= 2;
+            update();
+        }
+    }
+
+    function buyAuto() {
+        if(money >= costAuto) {
+            money -= costAuto;
+            autoPower++;
+            costAuto = Math.floor(costAuto * 1.5);
+            update();
+        }
+    }
+
     function update() {
         document.getElementById('energy').innerText = energy;
         document.getElementById('money').innerText = money;
+        document.getElementById('c-cost').innerText = costClick;
+        document.getElementById('a-cost').innerText = costAuto;
+        document.getElementById('up-c').disabled = money < costClick;
+        document.getElementById('up-a').disabled = money < costAuto;
     }
 
     function openTab(id) {
@@ -99,6 +146,13 @@
         document.getElementById(id).classList.add('active');
         document.getElementById('btn-' + id.split('-')[1]).classList.add('active');
     }
+
+    setInterval(() => {
+        if(autoPower > 0) {
+            energy += autoPower;
+            update();
+        }
+    }, 1000);
 </script>
 </body>
 </html>
