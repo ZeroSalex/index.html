@@ -3,152 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Production | Hub</title>
+    <title>Serv1ce465 | Web Developer</title>
     <style>
         :root {
-            --bg: #0f0f12; --card: #1a1a20; --text: #ffffff; --border: #333;
-            --accent: #4facfe; --green: #44ff44; --gray: #888;
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --accent: #007bff;
+            --secondary: #1a1a1a;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); text-align: center; margin: 0; user-select: none; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            background: var(--secondary);
+            border-bottom: 1px solid #333;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: var(--text);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        nav button:hover {
+            color: var(--accent);
+        }
+        .container {
+            max-width: 800px;
+            width: 90%;
+            padding: 40px 0;
+            display: none; /* Скрыто по умолчанию */
+        }
+        .active { display: block; }
 
-        /* Экран входа */
-        #auth-screen { position: fixed; inset: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .auth-card { padding: 35px; width: 300px; background: var(--card); border: 1px solid var(--border); border-radius: 28px; }
-        .brand-logo { width: 90px; height: 90px; margin-bottom: 25px; filter: drop-shadow(0 0 15px var(--accent)); }
-        .auth-input { padding: 14px; width: 100%; margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--border); background: #000; color: #fff; text-align: center; box-sizing: border-box; font-size: 1rem; }
+        /* Стили для портфолио */
+        h1 { font-size: 3rem; margin-bottom: 10px; }
+        .hero { text-align: center; margin-bottom: 50px; }
+        .project-card {
+            background: var(--secondary);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+        }
 
-        /* Навигация */
-        .tabs-nav { display: flex; justify-content: center; gap: 8px; margin: 15px auto; padding: 0 10px; max-width: 600px; }
-        .tab-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 12px; cursor: pointer; font-weight: bold; flex: 1; font-size: 0.85rem; }
-        .tab-btn.active { background: var(--accent); border-color: var(--accent); }
-        
-        .tab-content { display: none; flex-direction: column; align-items: center; padding: 20px; animation: fadeIn 0.4s ease; }
-        .tab-content.active { display: flex; }
-
-        /* Статистика */
-        .stats-bar { display: flex; justify-content: center; gap: 20px; padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); font-family: monospace; font-size: 1.1rem; }
-        
-        /* Главная игра */
-        .lightning { font-size: 6rem; cursor: pointer; margin: 10px; filter: drop-shadow(0 0 25px var(--accent)); transition: 0.1s; }
-        .lightning:active { transform: scale(0.9); }
-        
-        .main-controls { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        .btn-sell { background: var(--green); border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; color: #000; font-size: 1rem; }
-        
-        .upgrade-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
-        .up-btn { background: var(--card); border: 1px solid var(--accent); color: #fff; padding: 12px 5px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: 0.2s; }
-        .up-btn:disabled { opacity: 0.4; border-color: var(--border); cursor: not-allowed; }
-        .up-btn span { display: block; color: var(--green); font-size: 0.7rem; }
-
-        /* Портфолио и Услуги */
-        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 450px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 20px; text-align: left; border-left: 5px solid var(--accent); position: relative; }
-        .card h3 { margin: 0 0 8px 0; color: var(--accent); font-size: 1.1rem; }
-        .card p { margin: 0; font-size: 0.9rem; color: #ccc; }
-        .price-tag { color: var(--green); font-weight: bold; margin-top: 5px; display: block; }
-        .buy-btn { background: var(--accent); border: none; color: #fff; padding: 12px; width: 100%; border-radius: 12px; cursor: pointer; font-weight: bold; text-decoration: none; display: block; text-align: center; margin-top: 15px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Стиль для кликера (твоя игра) */
+        .clicker-box {
+            text-align: center;
+            padding: 50px;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            border-radius: 20px;
+        }
+        #energy-btn {
+            font-size: 50px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            filter: drop-shadow(0 0 10px var(--accent));
+        }
     </style>
 </head>
 <body>
 
-    <div id="auth-screen">
-        <div class="auth-card">
-            <img src="https://img.icons8.com/fluency/100/code-file.png" class="brand-logo" alt="Logo">
-            <input type="text" id="name-input" class="auth-input" placeholder="Ваш ник">
-            <button class="buy-btn" onclick="login()">НАЧАТЬ РАБОТУ</button>
-        </div>
+<header>
+    <nav>
+        <button onclick="showPage('home')">Главная</button>
+        <button onclick="showPage('portfolio')">Портфолио</button>
+        <button onclick="showPage('game')">Лаборатория (Игра)</button>
+    </nav>
+</header>
+
+<div id="home" class="container active">
+    <div class="hero">
+        <h1>Serv1ce465</h1>
+        <p>Разработка современных сайтов и Telegram-ботов на чистом коде.</p>
+        <p style="color: #888;">Минимализм. Скорость. Результат.</p>
     </div>
-
-    <div id="game-screen" style="display:none;">
-        <div class="stats-bar">
-            <div>⚡ <span id="energy">0</span></div>
-            <div>💰 $<span id="money">0</span></div>
-        </div>
-
-        <div class="tabs-nav">
-            <button class="tab-btn active" id="btn-play" onclick="openTab('tab-play')">Игра</button>
-            <button class="tab-btn" id="btn-portfolio" onclick="openTab('tab-portfolio')">Портфолио</button>
-            <button class="tab-btn" id="btn-services" onclick="openTab('tab-services')">Услуги</button>
-        </div>
-
-        <div id="tab-play" class="tab-content active">
-            <div class="lightning" onclick="clickEnergy()">⚡</div>
-            <div class="main-controls">
-                <button class="btn-sell" onclick="sellEnergy()">ПРОДАТЬ ЭНЕРГИЮ</button>
-                <div class="upgrade-row">
-                    <button class="up-btn" id="up-click" onclick="buyUpgrade('click')">+1 Клик <span id="cost-click">$50</span></button>
-                    <button class="up-btn" id="up-auto" onclick="buyUpgrade('auto')">+1 Авто <span id="cost-auto">$150</span></button>
-                </div>
-                <div style="margin-top: 10px; font-size: 0.8rem; color: var(--gray);">
-                    Сила клика: <span id="p-power">1</span> | Авто-добыча: <span id="a-power">0</span>/с
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-portfolio" class="tab-content">
-            <div class="grid">
-                <div class="card"><h3>Crypto Landing</h3><p>Крипто-визитка с анимацией.</p></div>
-                <div class="card"><h3>AI Assistant</h3><p>Умный бот для Telegram.</p></div>
-                <div class="card"><h3>Digital Store</h3><p>Магазин цифровых товаров.</p></div>
-            </div>
-        </div>
-
-        <div id="tab-services" class="tab-content">
-            <div class="grid">
-                <div class="card">
-                    <h3>Заказать разработку</h3>
-                    <p>Создание лендингов и Telegram-ботов под ключ.</p>
-                    <span class="price-tag">Цена: от 2 000 руб.</span>
-                    <a href="https://t.me/Serv1ce465" target="_blank" class="buy-btn">Обсудить проект</a>
-                </div>
-            </div>
-        </div>
+    <div class="project-card">
+        <h3>Почему я?</h3>
+        <ul>
+            <li>**Без переплат за хостинг**: Размещаю сайты на GitHub Pages бесплатно.</li>
+            <li>**Чистый код**: Никаких тяжелых конструкторов, только HTML/CSS/JS.</li>
+            <li>**Адаптивность**: Ваши клиенты смогут зайти с любого устройства.</li>
+        </ul>
     </div>
+</div>
+
+<div id="portfolio" class="container">
+    <h2>Мои работы</h2>
+    <div class="project-card">
+        <h3>Концепт: Клиника медицины</h3>
+        <p>Премиальный минималистичный дизайн для медицинских центров. Упор на запись и доверие.</p>
+    </div>
+    <div class="project-card">
+        <h3>Telegram Bot System</h3>
+        <p>Автоматизация бизнеса через мессенджеры. Интеграция с базами данных.</p>
+    </div>
+</div>
+
+<div id="game" class="container">
+    <div class="clicker-box">
+        <h2>Твоя Энергия: <span id="score">0</span></h2>
+        <button id="energy-btn">⚡</button>
+        <p>Проект в разработке (Экспериментальная функция)</p>
+    </div>
+</div>
 
 <script>
-    let energy = 0, money = 0, clickPower = 1, autoPower = 0;
-    let costClick = 50, costAuto = 150;
-
-    function login() {
-        let name = document.getElementById('name-input').value.trim();
-        if(name.length < 2) return;
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('game-screen').style.display = 'block';
+    // Навигация
+    function showPage(pageId) {
+        document.querySelectorAll('.container').forEach(page => page.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
     }
 
-    function clickEnergy() { energy += clickPower; update(); }
-    function sellEnergy() { money += energy; energy = 0; update(); }
+    // Твоя прошлая логика кликера (сохранена)
+    let score = 0;
+    const scoreElement = document.getElementById('score');
+    const btn = document.getElementById('energy-btn');
 
-    function buyUpgrade(type) {
-        if(type === 'click' && money >= costClick) {
-            money -= costClick; clickPower++; costClick = Math.floor(costClick * 1.8);
-        } else if(type === 'auto' && money >= costAuto) {
-            money -= costAuto; autoPower++; costAuto = Math.floor(costAuto * 2.2);
-        }
-        update();
-    }
-
-    function update() {
-        document.getElementById('energy').innerText = energy;
-        document.getElementById('money').innerText = money;
-        document.getElementById('p-power').innerText = clickPower;
-        document.getElementById('a-power').innerText = autoPower;
-        document.getElementById('cost-click').innerText = "$" + costClick;
-        document.getElementById('cost-auto').innerText = "$" + costAuto;
-        document.getElementById('up-click').disabled = money < costClick;
-        document.getElementById('up-auto').disabled = money < costAuto;
-    }
-
-    function openTab(id) {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.getElementById('btn-' + id.split('-')[1]).classList.add('active');
-    }
-
-    setInterval(() => { if(autoPower > 0) { energy += autoPower; update(); } }, 1000);
+    btn.addEventListener('click', () => {
+        score++;
+        scoreElement.innerText = score;
+        // Эффект нажатия
+        btn.style.transform = "scale(0.9)";
+        setTimeout(() => btn.style.transform = "scale(1)", 100);
+    });
 </script>
+
 </body>
 </html>
